@@ -30,12 +30,13 @@ flags_array=(
     "-c -mp -p1 -cr7.1 -dng1.4"
 )
 
-# TODO: Remove the adobe dng output
 # TODO: Add file size difference (percentage) compared to default arguments
 
-for flag in "${flags_array[@]}"; do
-    test_flags "$flags"
+for flags in "${flags_array[@]}"; do
+    test_flags "$flags" > /dev/null 2>/dev/null # Suppress GPU Warnings
     echo "Using flags" $flags
-    ls -l DNG
+    # Suppress the "total" line from output + only display file size and name
+    ls -l DNG | tail -n +2 | awk '{print $5, $9}'
     rm DNG/*
+    echo
 done
