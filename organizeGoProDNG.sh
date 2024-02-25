@@ -14,7 +14,7 @@ mv *.GPR GPR
 # Create a DNG folder
 mkdir DNG
 # Populate the DNG folder via Adobe DNG Converter
-/Applications/Adobe\ DNG\ Converter.app/Contents/MacOS/Adobe\ DNG\ Converter -fl -d DNG GPR/*
+/Applications/Adobe\ DNG\ Converter.app/Contents/MacOS/Adobe\ DNG\ Converter -fl -mp -d DNG GPR/*
 
 ls -l DNG
 shasum -a 256 DNG/GOPR0924.dng

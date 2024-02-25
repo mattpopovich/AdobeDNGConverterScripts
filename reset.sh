@@ -1,4 +1,5 @@
 rm -f *.GPR
+rm -f *.gpr
 rm -f *.JPG
 
 rm -rf GPR
