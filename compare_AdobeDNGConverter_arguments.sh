@@ -3,9 +3,10 @@
 
 # This script is expecting to be ran in a folder that has a bunch of *.GPR files:
 # $ ls
-# GOPR0924.GPR
-# GOPR0925.GPR
-# compareDNGarguments.sh
+# GOPR0000.GPR
+# GOPR0001.GPR
+# compare_AdobeDNGConverter_arguments.sh
+# $ ./compare_AdobeDNGConverter_arguments.sh
 
 # WARNING: This script will be creating (and destroying) a .DNG folder
 
@@ -23,7 +24,7 @@ function test_flags(){
 }
 
 flags_array=(
-    "-c -p1        -cr7.1 -dng1.7.1"     # Default
+    "-c -p1        -cr7.1 -dng1.7.1"     # Default values for AdobeDNGConverter 16.2.0
     "-u -p1        -cr7.1 -dng1.7.1"
     "-l -p1        -cr7.1 -dng1.7.1"
     "-c -p1 -e     -cr7.1 -dng1.7.1"
@@ -35,7 +36,7 @@ flags_array=(
 )
 
 # Get default statistics
-start_time=$(ruby -e 'puts Time.now.to_f')  # https://serverfault.com/a/423642/453183
+start_time=$(ruby -e 'puts Time.now.to_f')  # Alternatives: https://serverfault.com/a/423642/453183
 test_flags "${flags_array[0]}" > /dev/null 2>/dev/null
 end_time=$(ruby -e 'puts Time.now.to_f')
 default_run_time=$(echo "${end_time} - ${start_time}" | bc)
