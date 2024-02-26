@@ -7,4 +7,4 @@ rm -rf JPG
 rm -rf DNG
 rm -rf .DNG
 
-cp original/* .
+cp examples/* .
