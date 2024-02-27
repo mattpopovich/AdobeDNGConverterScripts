@@ -1,14 +1,14 @@
 # This script runs Adobe DNG Converter CLI with a bunch of different arguments
 #   and compares their runtime and output file sizes
 
+# WARNING: This script will be creating (and destroying) a .DNG folder
+
 # This script is expecting to be ran in a folder that has a bunch of *.GPR files:
 # $ ls
 # GOPR0000.GPR
 # GOPR0001.GPR
 # compare_AdobeDNGConverter_arguments.sh
 # $ ./compare_AdobeDNGConverter_arguments.sh
-
-# WARNING: This script will be creating (and destroying) a .DNG folder
 
 # Author: Matt Popovich (mattpopovich.com)
 

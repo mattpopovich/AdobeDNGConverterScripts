@@ -18,12 +18,27 @@
 
 # Author: Matt Popovich (mattpopovich.com)
 
+# Allow this script to be renamed to a .command file and run in the
+#   current directory that this script is in (and not the user's home directory ~)
+cd "$(dirname "$0")"
+
 # Stop running script if any command fails
 set -e
 
-# TOOD: Check if folders exist to hit that this script has already ran
-# check JPG GPR DNG
-# If it finds them, tell the user to delete those folders and run again
+# Prevent this script from overwriting folders
+if [ -d JPG ] || [ -d GPR ] || [ -d dng ]; then     # Shell is not case sensitive
+    echo "ERROR: JPG, GPR, or DNG folder was found." \
+         "Please remove it (so that we don't mess it up) before running this script"
+    exit 1
+fi
+
+# Make sure we have the expected files in this folder (both *.JPG and *.GPR files)
+if ! ls *.JPG *.GPR 1> /dev/null 2>&1; then
+    echo "ERROR: Did not find both *.JPG and *.GPR files in this folder" \
+         "Are you running this script in the right folder?" \
+         "Extensions must be capitalized"
+    exit 2
+fi
 
 # Move files into a JPG folder
 mkdir JPG
