@@ -25,6 +25,7 @@ set -e
 jpg_dir="JPG"
 gpr_dir="GPR"
 dng_dir="dng"
+adobeDNGconverter="/Applications/Adobe DNG Converter.app/Contents/MacOS/Adobe DNG Converter"
 
 # Function to display a progress bar
 show_progress() {
@@ -60,6 +61,12 @@ if ! ls *."$jpg_dir" *."$gpr_dir" 1> /dev/null 2>&1; then
     exit 2
 fi
 
+# Make sure the Adobe DNG Converter executable exists
+if [ ! -x "$adobeDNGconverter" ]; then
+    echo "ERROR: Could not find executable: $adobeDNGconverter"
+    exit 3
+fi
+
 # Count total number of files in GPR directory to process
 total_files=$(ls -1 *."$gpr_dir" | wc -l | xargs)
 # Capture the start time (in seconds with nanoseconds)
@@ -76,7 +83,7 @@ mv *."$gpr_dir" "$gpr_dir"
 # Create a DNG folder
 mkdir "$dng_dir"
 # Populate the DNG folder via Adobe DNG Converter (in the background)
-/Applications/Adobe\ DNG\ Converter.app/Contents/MacOS/Adobe\ DNG\ Converter -fl -mp -d "$dng_dir" "$gpr_dir"/* &
+"$adobeDNGconverter" -fl -mp -d "$dng_dir" "$gpr_dir"/* &
 
 # Get the PID of the executable
 exec_pid=$!
