@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:  # This triggers on any commit
+    branches:
+      - '**'  # Runs on all branches
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-12, macos-13, macos-14, macos-15]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run reset.sh
+      run: |
+        chmod +x ./reset.sh
+        ./reset.sh
+
+    - name: Run organizeGoProDNG.sh
+      run: |
+        chmod +x ./organizeGoProDNG.sh
+        ./organizeGoProDNG.sh
