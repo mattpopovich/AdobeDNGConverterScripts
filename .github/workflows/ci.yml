@@ -11,11 +11,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13, macos-14, macos-15]
+        os: [macos-12, macos-13, macos-14]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
+    - name: Install Adobe DNG Converter
+      run: |
+        # Download the DNG Converter DMG file
+        curl -L -o DNGConverter.dmg https://www.adobe.com/go/dng_converter_mac
+        # Mount the DMG file
+        hdiutil attach DNGConverter.dmg
+        # Copy the application to the Applications folder
+        cp -R /Volumes/Adobe\ DNG\ Converter/Adobe\ DNG\ Converter.app /Applications/
+        # Unmount the DMG file
+        hdiutil detach /Volumes/Adobe\ DNG\ Converter
 
     - name: Run reset.sh
       run: |
