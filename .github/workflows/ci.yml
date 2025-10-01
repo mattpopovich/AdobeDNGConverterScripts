@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:  # This triggers on any commit
+    branches:
+      - '**'  # Runs on all branches
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # These images are arm64 unless specified: https://github.com/actions/runner-images
+        os: [macos-15] # macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Adobe DNG Converter
+      run: |
+        printf -- "-Downloading the DNG Converter .dmg file\n"
+        curl -L -o DNGConverter_17_5.dmg https://download.adobe.com/pub/adobe/dng/mac/DNGConverter_17_5.dmg
+
+        printf -- "\n\n-Mounting the DMG file\n"
+        hdiutil attach DNGConverter_17_5.dmg
+
+        # Rosetta2 is installed on arm64 Macs
+        if [ -e /Library/Apple/usr/libexec/oah/libRosettaRuntime ]; then
+          printf -- "\n\n-Running on Apple Silicon\n"
+        else
+          printf -- "\n\n-Running on Intel\n"
+        fi
+
+        printf -- "\n\n-Installing Adobe DNG Converter\n"
+        sudo installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target `pwd`
+
+        printf -- "\n\n-Unmounting the DMG file\n"
+        hdiutil detach /Volumes/DNGConverter_17_5
+
+    - name: Run reset.sh
+      run: |
+        chmod +x ./reset.sh
+        ./reset.sh
+
+    - name: Run organizeGoProDNG.sh
+      run: |
+        chmod +x ./organizeGoProDNG.sh
+        ./organizeGoProDNG.sh
