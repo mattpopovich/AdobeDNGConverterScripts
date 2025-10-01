@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         # This is an intel image: https://github.com/actions/runner-images
-        os: [macos-14, macos-15]
+        os: [macos-14, macos-15, macos-15-intel, macos-26]
 
     steps:
     - name: Checkout repository
@@ -24,22 +24,10 @@ jobs:
         curl -L -o DNGConverter_17_5.dmg https://download.adobe.com/pub/adobe/dng/mac/DNGConverter_17_5.dmg
         # Mount the DMG file
         hdiutil attach DNGConverter_17_5.dmg
-        # Rosetta2 is not installed
-        echo "Is Rosetta2 installed? "
+        # Rosetta2 is installed on arm64 Macs
         ls /Library/Apple/usr/libexec/oah/libRosettaRuntime || true
-
         # Install Adobe DNG Converter
-        echo "Contents of current directory:"
-        ls -la
-        echo "Contents of mounted volume:"
-        ls /Volumes/DNGConverter_17_5
-        echo "pwd: $(pwd)"
-        echo "Attempting to run installer"
         sudo installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target `pwd`
-        # Attempt to install Rosetta2 
-        # sudo softwareupdate --install-rosetta
-        echo "ls on base path / : $(ls /)"
-        echo "ls in /Applications: $(ls /Applications)"
         # Unmount the DMG file
         hdiutil detach /Volumes/DNGConverter_17_5
 
