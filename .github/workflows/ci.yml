@@ -11,8 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # This is an intel image: https://github.com/actions/runner-images
-        os: [macos-14, macos-15, macos-15-intel, macos-26]
+        # These images are arm64 unless specified: https://github.com/actions/runner-images
+        os: [macos-15] # macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
 
     steps:
     - name: Checkout repository
@@ -20,15 +20,23 @@ jobs:
 
     - name: Install Adobe DNG Converter
       run: |
-        # Download the DNG Converter DMG file
+        echo "Downloading the DNG Converter DMG file"
         curl -L -o DNGConverter_17_5.dmg https://download.adobe.com/pub/adobe/dng/mac/DNGConverter_17_5.dmg
-        # Mount the DMG file
+
+        echo "Mounting the DMG file"
         hdiutil attach DNGConverter_17_5.dmg
+
         # Rosetta2 is installed on arm64 Macs
-        ls /Library/Apple/usr/libexec/oah/libRosettaRuntime || true
-        # Install Adobe DNG Converter
+        if [ -e /Library/Apple/usr/libexec/oah/libRosettaRuntime ]; then
+          echo "\nRunning on Apple Silicon"
+        else
+          echo "\nRunning on Intel"
+        fi
+
+        echo "\nInstalling Adobe DNG Converter"
         sudo installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target `pwd`
-        # Unmount the DMG file
+
+        echo "\nUnmounting the DMG file"
         hdiutil detach /Volumes/DNGConverter_17_5
 
     - name: Run reset.sh
