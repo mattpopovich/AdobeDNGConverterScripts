@@ -31,7 +31,8 @@ jobs:
         ls -la
         echo "Contents of mounted volume:"
         ls /Volumes/DNGConverter_17_5
-        installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target .
+        echo "pwd: $(pwd)"
+        installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target `pwd`
         # Attempt to install Rosetta2 
         sudo softwareupdate --install-rosetta
         # Unmount the DMG file
