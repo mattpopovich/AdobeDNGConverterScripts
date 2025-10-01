@@ -27,6 +27,10 @@ jobs:
         # ls /Library/Apple/usr/libexec/oah/libRosettaRuntime
 
         # Install Adobe DNG Converter
+        echo "Contents of current directory:"
+        ls -la
+        echo "Contents of mounted volume:"
+        ls /Volumes/DNGConverter_17_5
         installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target .
         # Attempt to install Rosetta2 
         sudo softwareupdate --install-rosetta
