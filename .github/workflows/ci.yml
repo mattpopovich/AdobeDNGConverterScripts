@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13, macos-14]
+        os: [macos-14]
 
     steps:
     - name: Checkout repository
@@ -20,13 +20,15 @@ jobs:
     - name: Install Adobe DNG Converter
       run: |
         # Download the DNG Converter DMG file
-        curl -L -o DNGConverter.dmg https://www.adobe.com/go/dng_converter_mac
+        curl -L -o DNGConverter_17_5.dmg https://download.adobe.com/pub/adobe/dng/mac/DNGConverter_17_5.dmg
         # Mount the DMG file
-        hdiutil attach DNGConverter.dmg
-        # Copy the application to the Applications folder
-        cp -R /Volumes/Adobe\ DNG\ Converter/Adobe\ DNG\ Converter.app /Applications/
+        hdiutil attach DNGConverter_17_5.dmg
+        # Check if Rosetta2 is installed
+        ls /Library/Apple/usr/libexec/oah/libRosettaRuntime
+        # Install Adobe DNG Converter
+        installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target .
         # Unmount the DMG file
-        hdiutil detach /Volumes/Adobe\ DNG\ Converter
+        hdiutil detach /Volumes/DNGConverter_17_5
 
     - name: Run reset.sh
       run: |
