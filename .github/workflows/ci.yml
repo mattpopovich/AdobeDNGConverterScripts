@@ -11,6 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        # This is an intel image: https://github.com/actions/runner-images
         os: [macos-14]
 
     steps:
@@ -35,7 +36,9 @@ jobs:
         echo "Attempting to run installer"
         sudo installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target `pwd`
         # Attempt to install Rosetta2 
-        sudo softwareupdate --install-rosetta
+        # sudo softwareupdate --install-rosetta
+        echo "ls on base path / : $(ls /)"
+        echo "ls in /Applications: $(ls /Applications)"
         # Unmount the DMG file
         hdiutil detach /Volumes/DNGConverter_17_5
 
