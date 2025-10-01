@@ -20,23 +20,23 @@ jobs:
 
     - name: Install Adobe DNG Converter
       run: |
-        echo "Downloading the DNG Converter DMG file"
+        printf -- "-Downloading the DNG Converter .dmg file\n"
         curl -L -o DNGConverter_17_5.dmg https://download.adobe.com/pub/adobe/dng/mac/DNGConverter_17_5.dmg
 
-        echo "Mounting the DMG file"
+        printf -- "\n\n-Mounting the DMG file\n"
         hdiutil attach DNGConverter_17_5.dmg
 
         # Rosetta2 is installed on arm64 Macs
         if [ -e /Library/Apple/usr/libexec/oah/libRosettaRuntime ]; then
-          echo "\nRunning on Apple Silicon"
+          printf -- "\n\n-Running on Apple Silicon\n"
         else
-          echo "\nRunning on Intel"
+          printf -- "\n\n-Running on Intel\n"
         fi
 
-        echo "\nInstalling Adobe DNG Converter"
+        printf -- "\n\n-Installing Adobe DNG Converter\n"
         sudo installer -pkg /Volumes/DNGConverter_17_5/DNGConverter_17_5.pkg -target `pwd`
 
-        echo "\nUnmounting the DMG file"
+        printf -- "\n\n-Unmounting the DMG file\n"
         hdiutil detach /Volumes/DNGConverter_17_5
 
     - name: Run reset.sh
