@@ -25,16 +25,21 @@ function test_flags(){
 
 # Flag explanation: https://helpx.adobe.com/content/dam/help/en/camera-raw/digital-negative/jcr_content/root/content/flex/items/position/position-par/download_section/download-1/dng_converter_commandline.pdf
 flags_array=(
-    "-c -p1            -cr7.1 -dng1.7.1"    # Default values for AdobeDNGConverter 16.2.0 (lossless + compressed DNG files + medium JPEG preview)
-    "-u -p1            -cr7.1 -dng1.7.1"    # Output uncompressed DNG files
-    "-l -p1            -cr7.1 -dng1.7.1"    # Output linear DNG files
-    "-c -p1 -e         -cr7.1 -dng1.7.1"    # Embed original raw file inside DNG files
-    "-c -p0            -cr7.1 -dng1.7.1"    # Set JPEG preview size to none
-    "-c -p2            -cr7.1 -dng1.7.1"    # Set JPEG preview size to full size
-    "-c -p1 -fl        -cr7.1 -dng1.7.1"    # Embed fast load data inside DNG files
-    "-c -p1 -lossy     -cr7.1 -dng1.7.1"    # Use lossy compression
-    "-c -p1 -mp        -cr7.1 -dng1.7.1"    # Process multiple files in parallel
-    "-c -p1 -mp -lossy -cr7.1 -dng1.7.1"    # Use lossy compression while processing in parallel
+    "-c -p1            -cr7.1  -dng1.7.1"   # Default values for AdobeDNGConverter 16.2.0 (lossless + compressed DNG files + medium JPEG preview)
+    "-u -p1            -cr7.1  -dng1.7.1"   # Output uncompressed DNG files
+    "-l -p1            -cr7.1  -dng1.7.1"   # Output linear DNG files
+    "-c -p1 -e         -cr7.1  -dng1.7.1"   # Embed original raw file inside DNG files
+    "-c -p0            -cr7.1  -dng1.7.1"   # Set JPEG preview size to none
+    "-c -p2            -cr7.1  -dng1.7.1"   # Set JPEG preview size to full size
+    "-c -p1 -fl        -cr7.1  -dng1.7.1"   # Embed fast load data inside DNG files
+    "-c -p1 -lossy     -cr7.1  -dng1.7.1"   # Use lossy compression
+    "-c -p1 -mp        -cr7.1  -dng1.7.1"   # Process multiple files in parallel
+    "-c -p1 -mp        -cr11.2 -dng1.7.1"   # Upgrade minimum camera raw compatibility version
+    "-c -p1 -mp        -cr12.4 -dng1.7.1"   # ''
+    "-c -p1 -mp        -cr13.2 -dng1.7.1"   # ''
+    "-c -p1 -mp        -cr14.0 -dng1.7.1"   # ''
+    "-c -p1 -mp        -cr15.3 -dng1.7.1"   # ''
+    "-c -p1 -mp -lossy -cr7.1  -dng1.7.1"   # Use lossy compression while processing in parallel
 )
 
 # Prevent this script from overwriting folders
