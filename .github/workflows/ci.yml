@@ -39,12 +39,10 @@ jobs:
         printf -- "\n\n-Unmounting the DMG file\n"
         hdiutil detach /Volumes/DNGConverter_17_5
 
-    - name: Run reset.sh
+    - name: Test organizeGoProDNG.sh
       run: |
-        chmod +x ./reset.sh
-        ./reset.sh
+        ./tests/test_organizeGoProDNG.sh
 
-    - name: Run organizeGoProDNG.sh
+    - name: Test compare_AdobeDNGConverter_arguments.sh
       run: |
-        chmod +x ./organizeGoProDNG.sh
-        ./organizeGoProDNG.sh
+        echo "TODO"
