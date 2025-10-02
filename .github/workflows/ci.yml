@@ -42,8 +42,9 @@ jobs:
     - name: Test organizeGoProDNG.sh
       run: |
         chmod +x tests/test_organizeGoProDNG.sh
-        ./tests/test_organizeGoProDNG.sh
+        bash tests/test_organizeGoProDNG.sh
 
     - name: Test compare_AdobeDNGConverter_arguments.sh
       run: |
-        echo "TODO"
+        chmod +x tests/test_compare_AdobeDNGConverter_arguments.sh
+        bash tests/test_compare_AdobeDNGConverter_arguments.sh
