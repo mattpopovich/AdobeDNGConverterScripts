@@ -1,6 +1,9 @@
 # This script copies GoPro DNG files from the examples/ folder
 #   into the current folder, then runs organizeGoProDNG.sh
-
+#
+# This script should be run from the root of the repository Ex.
+# $ bash tests/test_organizeGoProDNG.sh
+#
 # Author: Matt Popovich (mattpopovich.com)
 
 # Stop running script if any command fails
@@ -25,7 +28,7 @@ cd tests
 ./organizeGoProDNG.sh
 
 # Confirm the expected results
-ls dng 
+ls dng
 ls JPG
 ls GPR
 ls dng/GOPR0000.DNG

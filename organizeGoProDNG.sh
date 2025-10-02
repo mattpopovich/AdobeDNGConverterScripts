@@ -1,21 +1,26 @@
-# A script to convert a folder coming fresh off of a GoPro from
-#   `GOPR0000.GPR`
-#   `GOPR0000.JPG`
-#   `GOPR0001.GPR`
-#   `GOPR0001.JPG`
-#   `organizeGoProDNG.sh`
-# to
-#   `GPR/`
-#       `GOPR0000.GPR`
-#       `GOPR0001.GPR`
-#   `JPG/`
-#       `GOPR0000.JPG`
-#       `GOPR0001.JPG`
-#   `dng/`
-#       `GOPR0000.dng`
-#       `GOPR0001.dng`
-#   `organizeGoProDNG.sh`
+# A script to convert a folder coming fresh off of a GoPro containing raw photos
+#   (with .GPR extensions) into a more organized folder structure, while also
+#   converting the .GPR files into .DNG files using Adobe DNG Converter.
+# Ex.
+# $ ls
+#   GOPR0000.GPR
+#   GOPR0000.JPG
+#   GOPR0001.GPR
+#   GOPR0001.JPG
+#   organizeGoProDNG.sh
+# $ bash organizeGoProDNG.sh
+# $ ls *
+#   GPR:
+#   GOPR0000.GPR GOPR0001.GPR
 
+#   JPG:
+#   GOPR0000.JPG GOPR0001.JPG
+#
+#   dng:
+#   GOPR0000.dng GOPR0001.dng
+#
+#   organizeGoProDNG.sh
+#
 # Author: Matt Popovich (mattpopovich.com)
 
 # Stop running script if any command fails

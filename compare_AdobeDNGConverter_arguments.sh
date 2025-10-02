@@ -1,26 +1,26 @@
 # This script runs Adobe DNG Converter CLI with a bunch of different arguments
 #   and compares their runtime and output file sizes
-
-# WARNING: This script will be creating (and destroying) a .DNG folder
-
+#
 # This script is expecting to be ran in a folder that has a bunch of *.GPR files:
 # $ ls
 # GOPR0000.GPR
 # GOPR0001.GPR
 # compare_AdobeDNGConverter_arguments.sh
-# $ ./compare_AdobeDNGConverter_arguments.sh
-
+# $ bash compare_AdobeDNGConverter_arguments.sh
+#
 # Author: Matt Popovich (mattpopovich.com)
 
 # Stop running script if any command fails
 set -e
 
-# Create a (hidden) .DNG folder to store our converted files
-mkdir .DNG
+# Constants
+gpr_extension="GPR"
+dng_dir=".DNG"
+adobeDNGconverter="/Applications/Adobe DNG Converter.app/Contents/MacOS/Adobe DNG Converter"
 
 # Will pass the argument given to Adobe DNG Converter
 function test_flags(){
-    /Applications/Adobe\ DNG\ Converter.app/Contents/MacOS/Adobe\ DNG\ Converter $1 -d .DNG *.GPR
+    "$adobeDNGconverter" $1 -d "$dng_dir" *."$gpr_extension"
 }
 
 # Flag explanation: https://helpx.adobe.com/content/dam/help/en/camera-raw/digital-negative/jcr_content/root/content/flex/items/position/position-par/download_section/download-1/dng_converter_commandline.pdf
@@ -37,14 +37,39 @@ flags_array=(
     "-c -p1 -mp -lossy -cr7.1 -dng1.7.1"    # Use lossy compression while processing in parallel
 )
 
+# Prevent this script from overwriting folders
+if [ -d "$dng_dir" ]; then     # Shell is not case sensitive
+    echo "ERROR: $dng_dir folder was found." \
+         "Please remove it (so that we don't mess it up) before running this script"
+    exit 1
+fi
+
+# Make sure we have the expected *.GPR files in this folder
+if ! ls *."$gpr_extension" 1> /dev/null 2>&1; then
+    printf  "%s\n" \
+            "ERROR: Did not find *.$gpr_extension files in this folder" \
+            "Are you running this script in the right folder?" \
+            "Extensions must be capitalized"
+    exit 2
+fi
+
+# Make sure the Adobe DNG Converter executable exists
+if [ ! -x "$adobeDNGconverter" ]; then
+    echo "ERROR: Could not find executable: $adobeDNGconverter"
+    exit 3
+fi
+
+# Create a (hidden) .DNG folder to store our converted files
+mkdir "$dng_dir"
+
 # Get default statistics
 start_time=$(ruby -e 'puts Time.now.to_f')  # Alternatives: https://serverfault.com/a/423642/453183
 test_flags "${flags_array[0]}" > /dev/null 2>/dev/null
 end_time=$(ruby -e 'puts Time.now.to_f')
 default_run_time=$(echo "${end_time} - ${start_time}" | bc)
-default_file_sizes=$(ls -l .DNG | awk '{sum += $5} END {print sum}')
+default_file_sizes=$(ls -l "$dng_dir" | awk '{sum += $5} END {print sum}')
 echo "Default = ${default_file_sizes}B, ${default_run_time}s"
-rm .DNG/*
+rm "$dng_dir"/*
 
 # Get statistics for flags
 for flags in "${flags_array[@]}"; do
@@ -63,7 +88,7 @@ for flags in "${flags_array[@]}"; do
     fi
 
     # Calculate file size differences
-    file_size=$(ls -l .DNG | awk '{sum += $5} END {print sum}')
+    file_size=$(ls -l "$dng_dir" | awk '{sum += $5} END {print sum}')
     size_difference=$(echo "${file_size} - ${default_file_sizes}" | bc)
     percent_size_difference=$(echo "100 * ${size_difference} / ${default_file_sizes}" | bc)
     if (( $(echo "$size_difference >= 0" | bc -l) )); then
@@ -73,8 +98,8 @@ for flags in "${flags_array[@]}"; do
 
     # Output statistics
     echo "Using flags ${flags} = ${time_difference}s (${percent_time_difference}%), ${size_difference}B (${percent_size_difference}%) vs default"
-    rm .DNG/*
+    rm "$dng_dir"/*
 done
 
 # Remove temporary folder
-rm -r .DNG
+rm -r "$dng_dir"
