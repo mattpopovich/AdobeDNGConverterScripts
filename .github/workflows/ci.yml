@@ -73,7 +73,13 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: dng-env
-        path: /Applications/Adobe\ DNG\ Converter.app
+        path: /tmp/dng-app
+
+    - name: Move to Applications
+      run: |
+        sudo mkdir -p "/Applications/Adobe DNG Converter.app"
+        sudo cp -R /tmp/dng-app/* "/Applications/Adobe DNG Converter.app/"
+        sudo chmod +x "/Applications/Adobe DNG Converter.app/Contents/MacOS/Adobe DNG Converter"
 
     - name: Verify installation
       run: |
