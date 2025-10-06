@@ -6,13 +6,13 @@ on:
       - '**'  # Runs on all branches
   pull_request:
 
-# YAML anchor for the runner OS
-# These images are arm64 unless specified: https://github.com/actions/runner-images
-# macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
 
 jobs:
   build:
-    runs-on: &runner-os [macos-15]
+    # YAML anchor for the runner OS
+    # These images are arm64 unless specified: https://github.com/actions/runner-images
+    # macOS CI is 10x more expensive than linux: https://docs.github.com/en/billing/concepts/product-billing/github-actions
+    runs-on: &runner-os [macos-15]  # [macos-14, macos-15, macos-15-intel, macos-26]
 
     steps:
     - name: Checkout repository
@@ -75,7 +75,7 @@ jobs:
         name: dng-env
         path: /tmp/dng-app
 
-    - name: Move to Applications
+    - name: Move environment to /Applications
       run: |
         sudo mkdir -p "/Applications/Adobe DNG Converter.app"
         sudo cp -R /tmp/dng-app/* "/Applications/Adobe DNG Converter.app/"
@@ -83,9 +83,6 @@ jobs:
 
     - name: Verify installation
       run: |
-        ls -l
-        ls -l /Applications
-        du -sh /Applications/Adobe*
         "/Applications/Adobe DNG Converter.app/Contents/MacOS/Adobe DNG Converter" -d
 
     - name: Test organizeGoProDNG.sh
