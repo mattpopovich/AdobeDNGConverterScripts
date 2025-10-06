@@ -33,7 +33,17 @@ jobs:
         printf -- "-Downloading the DNG Converter .dmg file\n"
         curl -L -o DNGConverter_17_5.dmg https://download.adobe.com/pub/adobe/dng/mac/DNGConverter_17_5.dmg
 
+    - name: Cache Adobe DNG Converter.app
+      id: cache-dng-app
+      uses: actions/cache@v3
+      with:
+        path: /Applications/Adobe\ DNG\ Converter.app
+        key: dng-app-17-5
+        restore-keys: |
+          dng-app-
+
     - name: Install Adobe DNG Converter
+      if: steps.cache-dng-app.outputs.cache-hit != 'true'
       run: |
         printf -- "\n\n-Mounting the DMG file\n"
         hdiutil attach DNGConverter_17_5.dmg
@@ -80,10 +90,10 @@ jobs:
       run: |
         ls -l
         ls -l /Applications
-        ls -l /Applications/Adobe\ DNG\ Converter.app
-        ls -l /Applications/Adobe\ DNG\ Converter.app/Contents
-        ls -l /Applications/Adobe\ DNG\ Converter.app/Contents/MacOS
-        /Applications/Adobe\ DNG\ Converter.app/Contents/MacOS/Adobe\ DNG\ Converter -d
+        ls -l "/Applications/Adobe DNG Converter.app"
+        ls -l "/Applications/Adobe DNG Converter.app/Contents"
+        ls -l "/Applications/Adobe DNG Converter.app/Contents/MacOS"
+        "/Applications/Adobe DNG Converter.app/Contents/MacOS/Adobe DNG Converter" -d
 
     - name: Test organizeGoProDNG.sh
       run: |
