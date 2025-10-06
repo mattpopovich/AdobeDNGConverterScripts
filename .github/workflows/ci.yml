@@ -6,13 +6,13 @@ on:
       - '**'  # Runs on all branches
   pull_request:
 
-env:
-  # These images are arm64 unless specified: https://github.com/actions/runner-images
-  RUNNER_OS: [macos-15] # macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
-
 jobs:
   build:
-    runs-on: ${{ env.RUNNER_OS }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # These images are arm64 unless specified: https://github.com/actions/runner-images
+        os: [macos-15] # macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
 
     steps:
     - name: Checkout repository
@@ -64,7 +64,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: ${{ env.RUNNER_OS }}
+    runs-on: ${{ matrix.os }}
 
     steps:
     - name: Checkout repository
