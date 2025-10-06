@@ -6,19 +6,29 @@ on:
       - '**'  # Runs on all branches
   pull_request:
 
+
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        # These images are arm64 unless specified: https://github.com/actions/runner-images
-        os: [macos-15] # macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
+    # YAML anchor for the runner OS
+    # These images are arm64 unless specified: https://github.com/actions/runner-images
+    # macOS CI is 10x more expensive than linux: https://docs.github.com/en/billing/concepts/product-billing/github-actions
+    runs-on: &runner-os [macos-15]  # [macos-14, macos-15, macos-15-intel, macos-26]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5
 
-    - name: Install Adobe DNG Converter
+    - name: Cache Adobe DNG Converter.app
+      id: cache-dng-app
+      uses: actions/cache@v3
+      with:
+        path: /Applications/Adobe\ DNG\ Converter.app
+        key: dng-app-17-5
+        restore-keys: |
+          dng-app-
+
+    - name: Download and Install Adobe DNG Converter
+      if: steps.cache-dng-app.outputs.cache-hit != 'true'
       run: |
         printf -- "-Downloading the DNG Converter .dmg file\n"
         curl -L -o DNGConverter_17_5.dmg https://download.adobe.com/pub/adobe/dng/mac/DNGConverter_17_5.dmg
@@ -38,6 +48,42 @@ jobs:
 
         printf -- "\n\n-Unmounting the DMG file\n"
         hdiutil detach /Volumes/DNGConverter_17_5
+
+    - name: Verify installation
+      run: |
+        du -sh /Applications/Adobe*
+        /Applications/Adobe\ DNG\ Converter.app/Contents/MacOS/Adobe\ DNG\ Converter -d
+
+    - name: Upload installed environment
+      uses: actions/upload-artifact@v4
+      with:
+        name: dng-env
+        path: /Applications/Adobe\ DNG\ Converter.app
+        retention-days: 30
+
+  test:
+    needs: build
+    runs-on: *runner-os
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Download installed environment
+      uses: actions/download-artifact@v4
+      with:
+        name: dng-env
+        path: /tmp/dng-app
+
+    - name: Move environment to /Applications
+      run: |
+        sudo mkdir -p "/Applications/Adobe DNG Converter.app"
+        sudo cp -R /tmp/dng-app/* "/Applications/Adobe DNG Converter.app/"
+        sudo chmod +x "/Applications/Adobe DNG Converter.app/Contents/MacOS/Adobe DNG Converter"
+
+    - name: Verify installation
+      run: |
+        "/Applications/Adobe DNG Converter.app/Contents/MacOS/Adobe DNG Converter" -d
 
     - name: Test organizeGoProDNG.sh
       run: |
