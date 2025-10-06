@@ -6,13 +6,13 @@ on:
       - '**'  # Runs on all branches
   pull_request:
 
+# YAML anchor for the runner OS
+# These images are arm64 unless specified: https://github.com/actions/runner-images
+# macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
+
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        # These images are arm64 unless specified: https://github.com/actions/runner-images
-        os: [macos-15] # macOS CI is expensive: [macos-14, macos-15, macos-15-intel, macos-26]
+    runs-on: &runner-os [macos-15]
 
     steps:
     - name: Checkout repository
@@ -64,7 +64,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: ${{ matrix.os }}
+    runs-on: *runner-os
 
     steps:
     - name: Checkout repository
@@ -80,7 +80,9 @@ jobs:
       run: |
         ls -l
         ls -l /Applications
-        sudo cp -R "Adobe DNG Converter.app" /Applications/
+        ls -l /Applications/Adobe\ DNG\ Converter.app
+        ls -l /Applications/Adobe\ DNG\ Converter.app/Contents
+        ls -l /Applications/Adobe\ DNG\ Converter.app/Contents/MacOS
         /Applications/Adobe\ DNG\ Converter.app/Contents/MacOS/Adobe\ DNG\ Converter -d
 
     - name: Test organizeGoProDNG.sh
